@@ -19,7 +19,6 @@
       :key="item.id"
     >
       <div class="card-inner">
-        <!-- buttonの修正から -->
         <button class="close-icon"
           @click="deleteItem(index)"
         >
@@ -31,8 +30,8 @@
           v-model="item.title"
           class="title-form"
         >
-        <p class="log-time">{{ resultTime(index) }}</p>
-        <p class="by-time">{{ currentTime(index) }}</p>
+        <p class="log-time">{{ item.time | toHourMin }}</p>
+        <p class="by-time">-{{ item.finishHours | toClockTime }}:{{ item.finishMinutes | toClockTime  }}</p>
       </div>
     </li>
   </ul>
@@ -43,42 +42,34 @@
 </template>
 
 <script lang="ts">
-export default {
+
+import Vue from 'vue'
+
+export default Vue.extend ({
   props: {
     timeLogLists: Array,
-    // logTitle: String
   },
+  filters: {
+    toHourMin: function(value:number):string {
+      const hours :string = Math.floor(value /3600).toString()
+      const min :string = ("0" + Math.floor(value % 3600 / 60).toString()).slice(-2)
+      return `${ hours }h${ min }min`
+    },
+    toClockTime: function(value:number):string {
+      return ("0" + value.toString()).slice(-2)
+    }    
+  }, 
   methods: {
-    deleteItem(index :number) {
+    deleteItem(index :number) :void {
       this.$emit('deleteItem',index)
     },
-    deleteAll() {
+    deleteAll() :void {
       if(confirm('All Delete Ok?')) {
         this.$emit('deleteAll')
       }
     }
-  },
-  computed: {
-    resultTime() {
-      const self = this
-      return function(index :number) {
-        const item :any = self.timeLogLists[index]
-        const resultHours :number = Math.floor(item.time /3600)
-        const resultMin :number = Math.floor(item.time % 3600 / 60)
-        return `${ resultHours }h${ resultMin }min`
-      }
-    },
-    currentTime() {
-      const self = this
-      return function(index :number) {
-        const item :any = self.timeLogLists[index]
-        const min = ("0" + item.finishMinutes).slice(-2)
-        const hour = ("0" + item.finishHours).slice(-2)
-        return `-${ hour }:${ min }`
-      }
-    },
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,5 @@
 <template>
   <div class="timer">
-    <!-- <p class="time">00:00:00</p> -->
     <p class="time">{{ countTime }}</p>
     <div class="timer-buttons">
       <v-btn
@@ -13,7 +12,6 @@
       >
         <v-icon>mdi-replay</v-icon>
       </v-btn>
-      <!-- あとでv-ifの条件でisActiveによってボタンごと切り替える -->
       <v-btn
         v-if="!isActive"
         elevation="2"
@@ -49,24 +47,27 @@
   </div>
 </template>
 <script lang="ts">
+import Vue from 'vue'
 import { NULL } from 'node-sass'
-export default {
+
+export default Vue.extend ({
   data: ()=> ({
-    isActive: false,
-    sec: 0,
-    playInterval: false,
-    finishHours: 0,
-    finishMinutes: 0
+    isActive: false as boolean,
+    sec: 0 as number,
+    playInterval: false as boolean,
+    finishHours: 0 as number,
+    finishMinutes: 0 as number
   }), 
   methods: {
-    changeIsActive() {
+    changeIsActive() :void {
       this.isActive = ! this.isActive
     },
-    count() {
+    count() :void {
       this.sec ++
     },
-    playAndStop() {
-      let timerId:any
+    playAndStop():void {
+      // let timerId:any
+      let timerId:any = null
       const self = this    
       this.changeIsActive();
       timerId = window.setInterval(()=> {
@@ -77,34 +78,33 @@ export default {
         }
       }, 1000)
     },
-    toggleDisable() {
+    toggleDisable():void {
       this.playInterval = true
       setTimeout(() => {
         this.playInterval = false
       }, 700);
     },
-    setDate() {
+    setDate():void {
       const date = new Date()
       this.finishHours = date.getHours()
       this.finishMinutes = date.getMinutes()
     },
-    addLog() {
-      const self = this
+    addLog():void {
       const logItem = {
-        time: self.sec,
-        finishHours: self.finishHours,
-        finishMinutes: self.finishMinutes
+        time: this.sec,
+        finishHours: this.finishHours,
+        finishMinutes: this.finishMinutes
       }
       this.$emit('emitLogItem',logItem)
-      this.sec = 0
+      this.resetTime();
     },
-    resetTime() {
+    resetTime():void {
       this.sec = 0
     },    
   },
   computed: {
-    countTime() {
-        const hours :number = Math.floor(this.sec /3600)
+    countTime():string {
+        const hours :string = Math.floor(this.sec /3600).toString()
         const min : string =
          ("0" + Math.floor(this.sec % 3600 / 60).toString()).slice(-2)
         const seconds :string =
@@ -112,7 +112,7 @@ export default {
         return `${ hours }:${ min }:${ seconds }`
     },
   },
-}
+})
 </script>
 <style lang="scss" scoped>
 .timer {
@@ -142,7 +142,6 @@ export default {
       opacity: 0.6;
     }
   }
-
 }
 
 </style>

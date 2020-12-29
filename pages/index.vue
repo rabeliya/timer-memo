@@ -15,12 +15,12 @@
   </div>
 </template>
 <script lang="ts">
-// this is pages
 
 import Vue from 'vue'
 import TimerApp from "~/components/TimerApp.vue"
 import LogLists from "~/components/LogLists.vue"
 import TotalLog from "~/components/TotalLog.vue"
+
 
 export default Vue.extend({
   components: {
@@ -94,11 +94,13 @@ export default Vue.extend({
   },
    watch: {
     timeLogLists: {
-      handler :function() {
+      handler :function() :void {
         this.processLists();
+        const parsed = JSON.stringify(this.timeLogLists)
+        localStorage.setItem('timeLogLists', parsed)        
       },
       deep: true,
-    }   
+    },      
   },
   computed: {
     makeResultLists: {
@@ -119,7 +121,6 @@ export default Vue.extend({
         const filterdLog :any = Object.keys(object).map(function (key) {
           return { name: key, time: object[key] };
         })
-        //sort
         this.resultLists = filterdLog.slice().sort((a:any, b:any) => {
         if (a.time < b.time) return 1
         if (a.time > b.time) return -1
@@ -127,12 +128,19 @@ export default Vue.extend({
         })
       }
     }
-  }
-  // mounted: function () {
-    
-  //   const gotItem :String = JSON.parse(localStorage.getItem("timeLogLists"))
-  //   this.timeLogLists = gotItem
-  // },
+  }, 
+  mounted: function () :void {
+    if(localStorage.getItem('timeLogLists')) {
+      const storedLogs = localStorage.getItem('timeLogLists')
+      try {
+        if(typeof storedLogs === 'string') {
+          this.timeLogLists = JSON.parse(storedLogs)
+        }
+      } catch(e) {
+        localStorage.removeItem('timeLogLists')
+      }
+    }    
+  } 
 })
 </script>
 

@@ -27,32 +27,34 @@
 </template>
 
 <script lang="ts">
-export default {
+
+import Vue from 'vue'
+export default Vue.extend({
   props: {
     resultLists: Array,
   },
   data:() => ({
   }), 
   filters: {
-    toHourMin: function(value:number) {
+    toHourMin: function(value:number) :string {
       const hours :number = Math.floor(value /3600)
       const min :string = ("0" + Math.floor(value % 3600 / 60)).slice(-2)
       return `${ hours }h${ min }min`
     }
   },
   methods: {
-    calcPercent(time:number,total:number) {
+    calcPercent(time:number,total:number) :number {
       if(total !== 0)
       { return Math.floor(time / total * 100) }
       return 0 
     },
-    barWidth(time :number,totalTime:number) {
+    barWidth(time :number,totalTime:number) :number{
       const wrapperWidth = 756;        
       return Math.floor(wrapperWidth * (time / totalTime));                            
     },  
   },
   computed: {
-    totalTime() {
+    totalTime() :number{
       if(this.resultLists.length !== 0) {
         const sum:any = this.resultLists.reduce(
           (prev, current :any) =>  prev + (current.time || 0),0
@@ -72,7 +74,7 @@ export default {
       }
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>
