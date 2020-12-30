@@ -29,6 +29,14 @@
 <script lang="ts">
 
 import Vue from 'vue'
+
+export interface EnumResults {
+  name:string;
+  time:number;
+}
+
+// interface EnumResults extends Array<EnumResults>{}
+
 export default Vue.extend({
   props: {
     resultLists: Array,
@@ -56,8 +64,8 @@ export default Vue.extend({
   computed: {
     totalTime() :number{
       if(this.resultLists.length !== 0) {
-        const sum:any = this.resultLists.reduce(
-          (prev, current :any) =>  prev + (current.time || 0),0
+        const sum:number = this.resultLists.reduce(
+          (prev:number, current:any) =>  prev + (current.time || 0),0
         )
         return sum;
       }

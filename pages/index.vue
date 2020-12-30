@@ -21,6 +21,18 @@ import TimerApp from "~/components/TimerApp.vue"
 import LogLists from "~/components/LogLists.vue"
 import TotalLog from "~/components/TotalLog.vue"
 
+interface LogLists {
+  time: number;
+  finishHours: number;
+  finishMinutes: number;
+  title:string;
+}
+
+interface EnumLists {
+// 普通にかく。id: number;label: string; key: any;など
+}
+
+interface EnumLists extends Array<EnumLists>{}
 
 export default Vue.extend({
   components: {
@@ -58,7 +70,7 @@ export default Vue.extend({
     changeActive(value : Boolean) {
       value = ! value
     },
-    receiveLogItem(logItem :any) {
+    receiveLogItem(logItem : LogLists ) {
       logItem.title = "newLog"
       this.timeLogLists.push(logItem)
     },
@@ -70,7 +82,7 @@ export default Vue.extend({
     processLists() {
       const object:any = [...this.timeLogLists].reduce(
         (object:any, current:any) => {
-        const name = current.title
+        const name :string = current.title
         if(object.hasOwnProperty(name)) {
           object[name] += current.time
         } else {
@@ -81,7 +93,6 @@ export default Vue.extend({
       const filterdLog :any = Object.keys(object).map(function (key) {
         return { name: key, time: object[key] };
       })
-      //sort
       this.resultLists = filterdLog.slice().sort((a:any, b:any) => {
       if (a.time < b.time) return 1
       if (a.time > b.time) return -1

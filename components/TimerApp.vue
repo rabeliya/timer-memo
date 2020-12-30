@@ -66,8 +66,7 @@ export default Vue.extend ({
       this.sec ++
     },
     playAndStop():void {
-      // let timerId:any
-      let timerId:any = null
+      let timerId:number = 0
       const self = this    
       this.changeIsActive();
       timerId = window.setInterval(()=> {
