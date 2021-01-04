@@ -28,12 +28,6 @@ interface LogLists {
   title:string;
 }
 
-interface EnumLists {
-// 普通にかく。id: number;label: string; key: any;など
-}
-
-interface EnumLists extends Array<EnumLists>{}
-
 export default Vue.extend({
   components: {
     TimerApp,
