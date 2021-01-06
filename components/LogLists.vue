@@ -4,7 +4,7 @@
     <h2 class="lists-title heading">Log Lists</h2>
     <div class="delete-wrapper">
       <button
-        class="delete-button"
+        class="delete-all-button"
         @click="deleteAll()" 
       >
         <v-icon dark>mdi-delete</v-icon>
@@ -19,7 +19,7 @@
       :key="item.id"
     >
       <div class="card-inner">
-        <button class="close-icon"
+        <button class="delete-button"
           @click="deleteItem(index)"
         >
           <v-icon dark>mdi-close</v-icon>
@@ -94,7 +94,7 @@ export default Vue.extend ({
       "..... close ..... title ..... time ..... by-time ....."
       "..... ..... ..... ..... ..... ..... ..... .....  ....." 32px
       / 24px  24px 20px  526px  20px 90px  1fr    70px    24px;
-    .close-icon {
+    .delete-button {
       grid-area: close;
       display: flex;
       align-items: center;

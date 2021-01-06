@@ -3,12 +3,12 @@
     <p class="time">{{ countTime }}</p>
     <div class="timer-buttons">
       <v-btn
-        :class="{ disabled: isActive }"
-        @click="resetTime"
         elevation="2"
         fab
         icon
-        class="button"         
+        class="button reset-button"         
+        :class="{ disabled: isActive }"
+        @click="resetTime"
       >
         <v-icon>mdi-replay</v-icon>
       </v-btn>
@@ -17,7 +17,7 @@
         elevation="2"
         fab
         icon
-        class="button"
+        class="button play-button"
         @click="playAndStop()"
         :class="{ disabled : playInterval }"         
       >
@@ -28,7 +28,7 @@
         elevation="2"
         fab
         icon
-        class="button"
+        class="button stop-button"
         @click="playAndStop();toggleDisable();setDate()"         
       >
         <v-icon>mdi-pause</v-icon>
@@ -37,7 +37,7 @@
         elevation="2"
         fab
         icon
-        class="button"         
+        class="button done-button"         
         :class="{ disabled: isActive }"
         @click="addLog()"
       >
