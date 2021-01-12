@@ -30,13 +30,6 @@
 
 import Vue from 'vue'
 
-export interface EnumResults {
-  name:string;
-  time:number;
-}
-
-// interface EnumResults extends Array<EnumResults>{}
-
 export default Vue.extend({
   props: {
     resultLists: Array,
@@ -50,18 +43,20 @@ export default Vue.extend({
       return `${ hours }h${ min }min`
     }
   },
-  methods: {
-    calcPercent(time:number,total:number) :number {
-      if(total !== 0)
+  computed: {
+    calcPercent() {
+      return function(time:number,total:number) :number {
+        if(total !== 0)
       { return Math.floor(time / total * 100) }
       return 0 
+      }
     },
-    barWidth(time :number,totalTime:number) :number{
-      const wrapperWidth = 756;        
-      return Math.floor(wrapperWidth * (time / totalTime));                            
-    },  
-  },
-  computed: {
+    barWidth() {
+      return function (time :number,totalTime:number) :number {
+        const wrapperWidth = 756;        
+        return Math.floor(wrapperWidth * (time / totalTime));                            
+      }
+    },
     totalTime() :number{
       if(this.resultLists.length !== 0) {
         const sum:number = this.resultLists.reduce(

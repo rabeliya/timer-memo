@@ -4,12 +4,17 @@
     <h2 class="lists-title heading">Log Lists</h2>
     <div class="delete-wrapper">
       <button
-        class="delete-all-button"
-        @click="deleteAll()" 
+        class="delete-button"
+        @click="deleteSelectedItem" 
       >
         <v-icon dark>mdi-delete</v-icon>
       </button>
-      <p class="delete-text">All Delete</p>
+      <button
+        class="toggle-select"
+        @click="changeSelect"
+      >
+        <v-icon dark>mdi-order-bool-ascending-variant</v-icon>
+      </button>
     </div>
    </div>
    <ul v-if="timeLogLists.length > 0">   
@@ -19,17 +24,22 @@
       :key="item.id"
     >
       <div class="card-inner">
-        <button class="delete-button"
-          @click="deleteItem(index)"
-        >
-          <v-icon dark>mdi-close</v-icon>
-        </button>
-        <input 
-          type="text"
-          
-          v-model="item.title"
-          class="title-form"
-        >
+        <v-checkbox
+          class="delete-check-box" 
+          v-if="isSelect"
+          v-model="selectedList"
+          id="item"
+          :value="index"
+          hide-details
+          dark         
+        ></v-checkbox>
+        <label for="item" class="title-label">
+          <input 
+            type="text"      
+            v-model="item.title"
+            class="title-form"
+          >
+        </label>
         <p class="log-time">{{ item.time | toHourMin }}</p>
         <p class="by-time">-{{ item.finishHours | toClockTime }}:{{ item.finishMinutes | toClockTime  }}</p>
       </div>
@@ -49,6 +59,12 @@ export default Vue.extend ({
   props: {
     timeLogLists: Array,
   },
+  data() {
+    return {
+      selectedList: [],
+      isSelect: false
+    }
+  },
   filters: {
     toHourMin: function(value:number):string {
       const hours :string = Math.floor(value /3600).toString()
@@ -60,13 +76,19 @@ export default Vue.extend ({
     }    
   }, 
   methods: {
-    deleteItem(index :number) :void {
-      this.$emit('deleteItem',index)
-    },
-    deleteAll() :void {
-      if(confirm('All Delete Ok?')) {
-        this.$emit('deleteAll')
+    deleteSelectedItem() :void {
+      if(this.selectedList.length !== 0 ) {
+        if(confirm('Delete Selected Item, OK?')) {
+          this.$emit('deleteSelectedItem',this.selectedList)
+          this.selectedList = []
+          this.changeSelect();
+        }
+      } else {
+        alert('Select Any Item !')
       }
+    },
+    changeSelect() {
+      this.isSelect = ! this.isSelect
     }
   }
 })
@@ -91,18 +113,18 @@ export default Vue.extend ({
     display: grid;
     grid-template:
       "..... ..... ..... ..... ..... ..... ..... .....  ....." 32px
-      "..... close ..... title ..... time ..... by-time ....."
+      "..... check ..... title ..... time ..... by-time ....."
       "..... ..... ..... ..... ..... ..... ..... .....  ....." 32px
       / 24px  24px 20px  526px  20px 90px  1fr    70px    24px;
-    .delete-button {
-      grid-area: close;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .delete-check-box {
+      grid-area: check;
+      margin-top: -2px;
     }
-    .title-form {
+    .title-label {
       grid-area: title;
-      color: #fff;
+      .title-form {
+        color: #fff;
+      }
     }
     .log-time {
       grid-area: time;
@@ -121,7 +143,7 @@ export default Vue.extend ({
      display: flex;
      align-self: flex-end;
      justify-content: space-between;
-     width: 130px;
+     width: 60px;
      color: #fff;
      .delete-text {
        font-size: 20px;

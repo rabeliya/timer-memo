@@ -38,7 +38,7 @@
         fab
         icon
         class="button done-button"         
-        :class="{ disabled: isActive }"
+        :class="{ disabled: isActive || sec === 0 }"
         @click="addLog()"
       >
         <v-icon>mdi-check</v-icon>
@@ -103,12 +103,19 @@ export default Vue.extend ({
   },
   computed: {
     countTime():string {
-        const hours :string = Math.floor(this.sec /3600).toString()
-        const min : string =
-         ("0" + Math.floor(this.sec % 3600 / 60).toString()).slice(-2)
-        const seconds :string =
-         ("0" + Math.floor(this.sec % 60).toString()).slice(-2)
+        const hours = this.calcToHour
+        const min = this.calcToMin
+        const seconds = this.calcToSec
         return `${ hours }:${ min }:${ seconds }`
+    },
+    calcToHour() :string {
+      return Math.floor(this.sec /3600).toString()
+    },
+    calcToMin() :string {
+      return ("0" + Math.floor(this.sec % 3600 / 60).toString()).slice(-2)
+    },
+    calcToSec() :string {
+      return ("0" + Math.floor(this.sec % 60).toString()).slice(-2)
     },
   },
 })
